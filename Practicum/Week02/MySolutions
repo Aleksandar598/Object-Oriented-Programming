@@ -1,0 +1,81 @@
+#include <iostream>
+#include <fstream>
+const char DELIMITER = ':';
+const char PAIRDELIMITER = ',';
+const char RELATIONDELIMITER = '.';
+const size_t ARRAY_SIZE = 1024;
+const size_t RELATIONPAIRS = 25;
+int strtoi(char str[]) {
+    int num = 0;
+    int i = 0;
+    while (str[i]) {
+        if (str[i] > '9' || str[i] < '0') {
+            std::cout << "Error while reading file" << std::endl;
+            return 0;
+        }
+        num = num * 10 + (str[i] - '0');
+        i++;
+    }
+    return num;
+}
+void createResultFile() {
+    int a, b, c;
+    std::cout << "Enter 3 nunbers:" << std::endl;
+    std::cin >> a;
+    std::cin >> b;
+    std::cin >> c;
+    if (std::cin.bad()) {
+        std::cerr << "Failed input";
+        return;
+    }
+    std::ofstream file("Result.txt", std::ios::trunc);
+    if (!file.is_open()) {
+        std::cerr << "File failed" << std::endl;
+    }
+    file << a + b + c << DELIMITER << a * b * c;
+    file.close();
+}
+void readResultFile() {
+    int a, b;
+    char str[ARRAY_SIZE];
+    std::ifstream file("Result.txt");
+    file.getline(str, ARRAY_SIZE, DELIMITER);
+    a = strtoi(str);
+    file.getline(str, ARRAY_SIZE, DELIMITER);
+    b = strtoi(str);
+    std::cout << a - b;
+    file.close();
+}
+struct pair {
+    int a;
+    int b;
+};
+struct relation {
+    size_t currentPairsNum;
+    pair arr[RELATIONPAIRS];
+};
+namespace pairs {
+    void writePairToFile(const char* file, pair& toWrite) {
+        std::ofstream File(file, std::ios::app);
+        File << toWrite.a << PAIRDELIMITER << toWrite.b;
+    }
+}
+void addPairToRelation(pair& toAdd, relation& a) {
+    if (a.currentPairsNum >= RELATIONPAIRS) {
+        std::cerr << "relation is full" << std::endl;
+        return;
+    }
+    a.arr[a.currentPairsNum] = toAdd;
+    a.currentPairsNum++;
+}
+void writeRelationToFile(relation& a) {
+    std::ofstream file("relationsFile.txt", std::ios::app);
+    file << a.currentPairsNum << RELATIONDELIMITER;
+    for (int i = 0; i < a.currentPairsNum; i++) {
+        pairs::writePairToFile(file,a.arr[i])
+    }
+}
+int main()
+{
+    
+}
