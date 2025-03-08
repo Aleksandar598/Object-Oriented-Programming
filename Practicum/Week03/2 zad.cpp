@@ -1,15 +1,15 @@
 #include <iostream>
 #include <fstream>
 
-namespace constants {
+namespace Constants {
 	constexpr size_t nameSize = 50;
 }
 struct StudentC {
 	int id;
 	double grade;
-	char name[constants::nameSize];
+	char name[Constants::nameSize];
 };
-namespace freeNS {
+namespace FreeNS {
 	void freeStudentArr(StudentC* ptr) {
 		delete[] ptr;
 	}
@@ -39,7 +39,7 @@ void createStudent(StudentC& student) {
 
 	std::cout << "name:" << std::endl;
 	std::cin.ignore();
-	std::cin.getline(student.name, constants::nameSize);
+	std::cin.getline(student.name, Constants::nameSize);
 }
 
 void writeStudentToBinary(StudentC& student) {
@@ -63,7 +63,7 @@ StudentC* loadStudents(size_t& dynArrSize) {
 		return nullptr;
 	}
 
-    dynArrSize = getFileSize(ifs) / sizeof(StudentC);
+	dynArrSize = getFileSize(ifs) / sizeof(StudentC);
 	StudentC* arr = new StudentC[dynArrSize];
 
 	ifs.read((char*)arr, getFileSize(ifs));
@@ -71,14 +71,14 @@ StudentC* loadStudents(size_t& dynArrSize) {
 	ifs.close();
 	return arr;
 }
-void sortByGrade(StudentC* arr,size_t& dynArrSize) {
+void sortByGrade(StudentC* arr, size_t& dynArrSize) {
 	for (int i = 0; i < dynArrSize; i++) {
 		for (int j = i; j < dynArrSize; j++) {
 			if (arr[i].grade < arr[j].grade) std::swap(arr[i], arr[j]);
 		}
 	}
 }
-void print(std::ostream& os, StudentC* arr,size_t& dynArrSize) {
+void print(std::ostream& os, StudentC* arr, size_t& dynArrSize) {
 	for (int i = 0; i < dynArrSize; i++) {
 		os << arr[i].id << " " << arr[i].grade << " " << arr[i].name;
 		os << std::endl;
@@ -88,9 +88,9 @@ void print(std::ostream& os, StudentC* arr,size_t& dynArrSize) {
 int main() {
 	StudentC student;
 	StudentC* ptr;
-	size_t dynArrSize=0;
+	size_t dynArrSize = 0;
 	ptr = loadStudents(dynArrSize);
 	sortByGrade(ptr, dynArrSize);
 	print(std::cout, ptr, dynArrSize);
-	freeNS::freeStudentArr(ptr);
+	FreeNS::freeStudentArr(ptr);
 }
